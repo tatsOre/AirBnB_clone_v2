@@ -16,9 +16,8 @@ class FileStorage:
             cls_dict = {}
             for k, v in self.__objects.items():
                 # Getting the class model and class name
-                my_cls = v.__class__
                 cls_name = v.__class__.__name__
-                if cls == my_cls or cls == cls_name:
+                if cls == cls_name:
                     cls_dict[k] = v
             return cls_dict
 
