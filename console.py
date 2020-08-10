@@ -73,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] == '{' and pline[-1] =='}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -115,16 +115,41 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
+        line = args.partition(" ")
+        class_name = line[0]
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+        elif class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
-        storage.save()
-        print(new_instance.id)
-        storage.save()
+        else:
+            new_instance = HBNBCommand.classes[class_name]()
+            print(new_instance.id)
+            storage.save()
+
+            if len(line) > 2:
+                # checks for keyworded inputs
+                args_list = line[2].split(" ")
+                instance_dict = {}
+                for a in args_list:
+                    key = a.split('=')[0]
+                    value = a.split('=')[1]
+                    try:
+                        # replace() won't cause errors(?), all args are
+                        # strings at this point
+                        instance_dict[key] = value.replace('_', ' ')
+                    except Exception as noValue:
+                        # If value is missing
+                        pass
+                
+                for key, value in instance_dict.items():
+                    # 'line': input to execute through console onecmd method
+                    line = 'update {} {} {} {}'.format(
+                            class_name, new_instance.id, key, str(value))
+                    self.onecmd(line)
+            else:
+                return
 
     def help_create(self):
         """ Help information for the create method """
