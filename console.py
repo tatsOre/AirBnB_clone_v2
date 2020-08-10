@@ -128,7 +128,7 @@ class HBNBCommand(cmd.Cmd):
             print(new_instance.id)
             storage.save()
 
-            if len(line) > 2:
+            if len(line) == 3 and line[2]:
                 # checks for keyworded inputs
                 args_list = line[2].split(" ")
                 instance_dict = {}
