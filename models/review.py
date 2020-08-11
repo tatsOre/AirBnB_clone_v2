@@ -2,11 +2,11 @@
 """
 Module for Review ORM/FileStorage Class for AirBnB clone - MySQL
 """
-from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
 from sqlalchemy import String, Column, ForeignKey
 
 
-class Review(BaseModel):
+class Review(BaseModel, Base):
     """Defines all instance attributes for a Review instance/record
        Public class attributes:
        place_id <string>: Place.id = <Class Place> + instance's id

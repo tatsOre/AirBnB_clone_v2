@@ -8,6 +8,7 @@ from models.state import State
 from models.city import City
 from models.user import User
 from models.place import Place
+from models.review import Review
 
 
 class DBStorage:
@@ -33,7 +34,7 @@ class DBStorage:
 
     def all(self, cls=None):
         """ Query on current DB session """
-        cls_list = [State, City, User, Place]
+        cls_list = [State, City, User, Place, Review]
         cls_dict = {}
         if cls:
             for obj in self.__session.query(cls):
