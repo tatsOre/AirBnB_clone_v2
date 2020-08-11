@@ -125,7 +125,7 @@ class HBNBCommand(cmd.Cmd):
                 # checks for keyworded inputs
                 args_list = line[2].split(" ")
                 instance_dict = {}
-                print(args_list)
+                #  print(args_list)
                 for a in args_list:
                     key = a.split('=')[0]
                     value = a.split('=')[1]
