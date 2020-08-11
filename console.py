@@ -2,6 +2,7 @@
 """ Console Module """
 import cmd
 import sys
+from os import getenv
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -42,22 +43,18 @@ class HBNBCommand(cmd.Cmd):
         (Brackets denote optional fields in usage example.)
         """
         _cmd = _cls = _id = _args = ''  # initialize line elements
-
         # scan for general formating - i.e '.', '(', ')'
         if not ('.' in line and '(' in line and ')' in line):
             return line
 
         try:  # parse line left to right
             pline = line[:]  # parsed line
-
             # isolate <class name>
             _cls = pline[:pline.find('.')]
-
             # isolate and validate <command>
             _cmd = pline[pline.find('.') + 1:pline.find('(')]
             if _cmd not in HBNBCommand.dot_cmds:
                 raise Exception
-
             # if parantheses contain arguments, parse them
             pline = pline[pline.find('(') + 1:pline.find(')')]
             if pline:
@@ -80,7 +77,6 @@ class HBNBCommand(cmd.Cmd):
                         _args = pline.replace(',', '')
                         # _args = _args.replace('\"', '')
             line = ' '.join([_cmd, _cls, _id, _args])
-
         except Exception as mess:
             pass
         finally:
@@ -125,31 +121,30 @@ class HBNBCommand(cmd.Cmd):
             return
         else:
             new_instance = HBNBCommand.classes[class_name]()
-            print(new_instance.id)
-            storage.save()
-
             if len(line) == 3 and line[2]:
                 # checks for keyworded inputs
                 args_list = line[2].split(" ")
                 instance_dict = {}
+                print(args_list)
                 for a in args_list:
                     key = a.split('=')[0]
                     value = a.split('=')[1]
                     try:
-                        # replace() won't cause errors(?), all args are
-                        # strings at this point
-                        instance_dict[key] = value.replace('_', ' ')
+                        instance_dict[key] = value
                     except Exception as noValue:
-                        # If value is missing
-                        pass
-                
+                        pass  # If value is missing
                 for key, value in instance_dict.items():
-                    # 'line': input to execute through console onecmd method
-                    line = 'update {} {} {} {}'.format(
-                            class_name, new_instance.id, key, str(value))
-                    self.onecmd(line)
-            else:
-                return
+                    if value[0] == "\"":
+                        new = value[1:-1]  # Fixed ID bug
+                        value = str(new.replace('_', ' '))
+                    elif "." in value and key in self.types.keys():
+                        value = float(value)
+                    else:
+                        value = int(value)
+                    setattr(new_instance, key, value)
+            print(new_instance.id)
+            storage.save()
+            new_instance.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -225,19 +220,27 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
         print_list = []
-
         if args:
             args = args.split(' ')[0]  # remove possible trailing args
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
+            if getenv("HBNB_TYPE_STORAGE") == 'db':
+                obj_list = storage.all().items()
+            else:
+                obj_list = storage._FileStorage__objects.items()
+
+            for k, v in obj_list:
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
         else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
+            if getenv("HBNB_TYPE_STORAGE") == 'db':
+                obj_list = storage.all().items()
+            else:
+                obj_list = storage._FileStorage__objects.items()
 
+            for k, v in obj_list:
+                print_list.append(str(v))
         print(print_list)
 
     def help_all(self):
@@ -344,6 +347,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()

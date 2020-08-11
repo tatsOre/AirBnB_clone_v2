@@ -1,9 +1,13 @@
 #!/usr/bin/python3
 """ New engine """
 from os import getenv
-from models.base_model import Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
+from models.base_model import Base
+from models.state import State
+from models.city import City
+from models.user import User
+from models.place import Place
 
 
 class DBStorage:
@@ -23,20 +27,13 @@ class DBStorage:
             .format(user, passwd, host, db),
             pool_pre_ping=True
         )
-        Base.metadata.create_all(self.__engine)
+
         if getenv("HBNB_ENV") == 'test':
-            Base.metadata.drop_all(bind=self.__engine)
+            Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """ Query on current DB session """
-        from models.user import User
-        from models.place import Place
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.review import Review
-
-        cls_list = [City, User, Place, State, Review, Amenity]
+        cls_list = [State, City, User, Place]
         cls_dict = {}
         if cls:
             for obj in self.__session.query(cls):
@@ -51,26 +48,22 @@ class DBStorage:
             return cls_dict
 
     def new(self, obj):
-        """ Add the obj to the current
-            DB """
+        """ Add the obj to the current DB """
         self.__session.add(obj)
 
     def save(self):
-        """ commit all changes to the
-        current DB """
+        """ commit all changes to the current DB """
         self.__session.commit()
 
     def delete(self, obj=None):
-        """ delete from current DB
-            if not none """
+        """ delete from current DB if not none """
         if obj:
             self.__session.delete(obj)
         else:
             return
 
     def reload(self):
-        """ create all table in the
-            DB """
+        """ create all table in the DB """
         Base.metadata.create_all(self.__engine)
         Session = scoped_session(sessionmaker(
             bind=self.__engine,

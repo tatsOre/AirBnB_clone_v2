@@ -1,18 +1,20 @@
 #!/usr/bin/python3
-""" City Module for HBNB project """
-from models.base_model import Base, BaseModel
-from sqlalchemy import String, Column, ForeignKey
+"""
+Module for City ORM/FileStorage Class for AirBnB clone - MySQL
+"""
+from models.base_model import BaseModel, Base
+from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy.orm import relationship
 
 
 class City(BaseModel, Base):
-    """ The city class, contains state ID and name """
-    __tablename__ = 'cities'
-    name = Column(
-        String(128),
-        nullable=False,
-    )
-    state_id = Column(
-        String(60),
-        ForeignKey('states.id'),
-        nullable=False,
-    )
+    """This is the class for City
+    Attributes:
+        state_id: The state id
+        name: input name
+    """
+    __tablename__ = "cities"
+    name = Column(String(128), nullable=False)
+    state_id = Column(String(60),
+                      ForeignKey("states.id"), nullable=False)
+    places = relationship('Place', backref='cities', cascade='all, delete')

@@ -14,7 +14,7 @@ class FileStorage:
             return FileStorage.__objects
         else:
             cls_dict = {}
-            for k, v in self.__objects.items():
+            for k, v in FileStorage.__objects.items():
                 # Getting the class model and class name
                 my_cls = v.__class__
                 if cls == my_cls:
@@ -64,5 +64,5 @@ class FileStorage:
             return
         else:
             obj_key = "{}.{}".format(type(obj).__name__, obj.id)
-            if obj_key in self.__objects:
-                self.__objects.pop(obj_key)
+            if obj_key in FileStorage.__objects:
+                FileStorage.__objects.pop(obj_key)
