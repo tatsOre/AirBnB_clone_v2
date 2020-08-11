@@ -2,8 +2,9 @@
 """
 Module for Place ORM/FileStorage Class for AirBnB clone - MySQL
 """
+import models
 from os import getenv
-from models import storage
+from models.review import Review
 from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey, Integer, Float
@@ -34,7 +35,7 @@ class Place(BaseModel, Base):
             """ Getter, return the list of Review
                 instances base in reference place_id => Place.id """
             review_list = []
-            for obj in storage.all(Review).values():
+            for obj in models.storage.all(Review).values():
                 if obj.place_id == self.id:
                     review_list.append(obj)
             return review_list
