@@ -2,9 +2,9 @@
 """
 Module for User ORM/FileStorage Class for AirBnB clone - MySQL
 """
-from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
+from models.base_model import BaseModel, Base
 
 
 class User(BaseModel, Base):
