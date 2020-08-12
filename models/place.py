@@ -7,7 +7,24 @@ from os import getenv
 from models.review import Review
 from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, ForeignKey, Integer, Float
+from sqlalchemy import Column, String, ForeignKey, Integer, Float, Table
+
+
+metadata = Base.metadata
+
+place_amenity = Table(
+    'place_amenity', metadata,
+    Column(
+        'place_id', String(60),
+        ForeignKey('places.id'),
+        primary_key=True, nullable=False,
+    ),
+    Column(
+        'amenity_id', String(60),
+        ForeignKey('amenities.id'),
+        primary_key=True, nullable=False,
+    )
+)
 
 
 class Place(BaseModel, Base):
@@ -25,8 +42,13 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, default=0, nullable=False,)
     latitude = Column(Float, nullable=True,)
     longitude = Column(Float, nullable=True,)
+    amenity_ids = []
 
     reviews = relationship('Review', backref='place', cascade='all, delete')
+    amenities = relationship(
+        'Amenity', secondary=place_amenity,
+        viewonly=False, back_populates='place_amenities'
+    )
 
     if getenv("HBNB_TYPE_STORAGE") != 'db':
         """ DBStorage """
@@ -39,3 +61,17 @@ class Place(BaseModel, Base):
                 if obj.place_id == self.id:
                     review_list.append(obj)
             return review_list
+
+        @property
+        def amenities(self):
+            """Returns list of Amenity instances
+                based on amenity_ids"""
+            return self.amenity_ids
+
+        @amenities.setter
+        def amenities(self, obj):
+            """ Setter attribute """
+            if obj.__class__.__name__ == 'Amenity':
+                self.amenity_ids.append(obj.id)
+            else:
+                return
