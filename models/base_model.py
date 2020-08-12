@@ -37,7 +37,7 @@ class BaseModel:
         Args:
             *args: Tuple that contains all attributes
             **kwargs: dictionary that contains all attributes by key/value args
-                (Note: __class__ from kwargs is not added as an attribute and
+                (Note __class__ from kwargs is not added as an attribute and
                 created_at and updated_at are converted into datetime object)
         """
         if not kwargs:
@@ -77,7 +77,7 @@ class BaseModel:
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
         if '_sa_instance_state' in dictionary:
-            dictionary.pop("_sa_instance_state")
+            del dictionary["_sa_instance_state"]
         return dictionary
 
     def delete(self):
