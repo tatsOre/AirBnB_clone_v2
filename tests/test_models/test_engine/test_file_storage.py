@@ -57,7 +57,7 @@ class TestFileStorage(unittest.TestCase):
         storage = FileStorage()
         obj = storage.all()
         user = User()
-        user.id = 123455
+        user.id = "ui-78piuyx-4ld8wp9-qa9th6"
         user.name = "Kevin"
         storage.new(user)
         key = user.__class__.__name__ + "." + str(user.id)
