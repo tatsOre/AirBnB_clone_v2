@@ -1,8 +1,9 @@
 #!/usr/bin/python3
-"""Module for pack_web_static"""
+"""Module for 1-pack_web_static.py"""
 from datetime import datetime
 from fabric.api import local, cd
 from os import path
+
 
 def do_pack():
     """
