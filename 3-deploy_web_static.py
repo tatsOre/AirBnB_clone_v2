@@ -23,7 +23,7 @@ def do_pack():
         pack = local("tar -czvf {}/{} {}".format(directory, file, source))
         if pack.succeeded:
             print("web_static packed: {}/{}".format(directory, file))
-            return file
+            return "{}/{}".format(directory, file)
         else:
             print('Failed')
             return None
