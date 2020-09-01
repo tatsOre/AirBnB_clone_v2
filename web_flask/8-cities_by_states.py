@@ -6,7 +6,6 @@ all States and cities instances from a database
 from flask import Flask, render_template
 from models.state import State
 from models import storage
-from os import getenv
 app = Flask(__name__)
 
 
@@ -18,7 +17,7 @@ def shutdown_session(response_or_exc):
 
 @app.route('/cities_by_states', strict_slashes=False)
 def display_cities():
-    """Displays HTML page with list of states"""
+    """Displays HTML page with list of states/cities"""
     states = storage.all(State).values()
     return render_template('8-cities_by_states.html', states=states)
 
