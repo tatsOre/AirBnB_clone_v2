@@ -1,0 +1,15 @@
+@charset "utf-8";
+
+header {
+    background-color: white;
+    border-bottom: 1px solid #CCCCCC;
+    height: 5em;
+    width: 100%;
+}
+
+.hbnb_logo {
+    background: url("../images/logo.png") no-repeat;
+    height: 4.5em;
+    background-size: 10.5em;
+    background-position: 1.5em center;
+}
