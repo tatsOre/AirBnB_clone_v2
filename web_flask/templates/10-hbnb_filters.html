@@ -19,10 +19,10 @@
                 <div class="locations">
                     <h3>States</h3>
                     <h4>&nbsp;</h4>
-                    <ul class="popover">
+                    <ul class="popover hide_scrollbar">
                     {% for state in states|sort(attribute='name') %}
                         <li>
-                            <h2>{{ state['name'] }}</h2>
+                            <h2 class="state_name">{{ state['name'] }}</h2>
                             <ul>
                                 {% for city in state.cities|sort(attribute="name") %}
                                 <li>{{ city['name'] }}</li>
@@ -35,7 +35,7 @@
                 <div class="amenities">
                     <h3>Amenities</h3>
                     <h4>&nbsp;</h4>
-                    <ul class="popover">
+                    <ul class="popover hide_scrollbar">
                     {% for item in amenities|sort(attribute='name') %}
                     <li>{{ item.name }}</li>
                     {% endfor %}

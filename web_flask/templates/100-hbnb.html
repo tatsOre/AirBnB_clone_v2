@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>AirBnB clone</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="../static/images/icon.png" type="image/png" rel="icon">
+        <link href="../static/styles/3-footer.css" type="text/css" rel="stylesheet">
+        <link href="../static/styles/3-header.css" type="text/css" rel="stylesheet">
+        <link href="../static/styles/4-common.css" type="text/css" rel="stylesheet">
+        <link href="../static/styles/6-filters.css" type="text/css" rel="stylesheet">
+        <link href="../static/styles/8-places.css" type="text/css" rel="stylesheet">   
+    </head>
+    <body>
+        <header>
+            <div class="hbnb_logo"></div>
+        </header>
+        <div class="container">
+            <section class="filters">
+                <div class="locations">
+                    <h3>States</h3>
+                    <h4>&nbsp;</h4>
+                    <ul class="popover hide_scrollbar">
+                    {% for state in states|sort(attribute='name') %}
+                        <li>
+                            <h2 class="state_name">{{ state['name'] }}</h2>
+                            <ul>
+                                {% for city in state.cities|sort(attribute="name") %}
+                                <li>{{ city['name'] }}</li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                <div class="amenities">
+                    <h3>Amenities</h3>
+                    <h4>&nbsp;</h4>
+                    <ul class="popover hide_scrollbar">
+                    {% for item in amenities|sort(attribute='name') %}
+                    <li>{{ item['name'] }}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                <button class="btn-search">Search</button>
+            </section>
+            <section class="places">
+                <h1 class="places-title">Places</h1>
+                {% for place in places|sort(attribute='name') %}
+                <article class="place-card">
+                    <div class="place-card__place-name">
+                        <h2>{{ place['name'] }}</h2>
+                    </div>
+                    <div class="price_by_night">${{ place['price_by_night'] }}</div>
+                    <div class="information">
+                        <div class="max_guest">{{ place['max_guest'] }} Guest</div>
+                        <div class="number_rooms">{{ place['number_rooms'] }} Room</div>
+                        <div class="number_bathrooms">{{ place['number_bathrooms'] }} Bathroom</div>
+                    </div>
+                    <div class="user">
+                        <span>Owner:</span> {{ place.user.first_name }} {{ place.user.last_name }}
+                    </div>
+                    <div class="description">
+                        <p>{{ place.description|safe }}</p>
+                    </div>
+                    <div class="amenities">
+                        <h2 class="amenities-title">Amenities</h2>
+                        <ul class="amenities-list">
+                            {% for amenity in place.amenities|sort(attribute='name') %}
+                            <li>{{ amenity.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="reviews">
+                        <h2 class="reviews-title">{{ place.reviews|length }} Reviews</h2>
+                        <ul class="reviews-list">
+                            {% for review in place.reviews%}
+                            <li>
+                                <h3 class="reviewer-date">
+                                    From {{ review.user.first_name }} {{ review.user.last_name }} the {{ review.created_at.strftime('%d %B %Y') }}
+                                </h3>
+                                <p class="reviewer-message">{{ review.text|safe }}</p>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </article>
+                {% endfor %}
+            </section>
+        </div>
+        <footer>
+            <p class="footer-text">Holberton School</p>
+        </footer>
+    </body>
+</html>
